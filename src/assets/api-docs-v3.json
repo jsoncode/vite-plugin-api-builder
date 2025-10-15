@@ -1,0 +1,168 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "xxx",
+		"description": "xx",
+		"version": "1.0"
+	},
+	"servers": [
+		{
+			"url": "http://xxx.com/xx"
+		}
+	],
+	"security": [
+		{
+			"Authorization": []
+		}
+	],
+	"tags": [
+		{
+			"name": "jssdkAPI",
+			"description": "wxjssdk"
+		}
+	],
+	"paths": {
+		"/wxjssdk/config": {
+			"post": {
+				"tags": [
+					"jssdkAPI"
+				],
+				"summary": "获取jssdk config参数",
+				"operationId": "getConfigInfo",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/WxJsApiDTO"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/R"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "Forbidden",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/R"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/R"
+								}
+							}
+						}
+					},
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/R"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"R": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "integer",
+						"description": "返回标记：成功=0，失败=1",
+						"format": "int32"
+					},
+					"msg": {
+						"type": "string",
+						"description": "返回信息"
+					},
+					"data": {
+						"type": "object",
+						"description": "数据"
+					},
+					"ok": {
+						"type": "boolean"
+					}
+				},
+				"description": "响应信息主体"
+			},
+			"WxJsApiDTO": {
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"properties": {
+					"appId": {
+						"type": "string",
+						"description": "应用ID"
+					},
+					"url": {
+						"type": "string",
+						"description": "签名用的url必须是调用JS接口页面的完整URL"
+					}
+				}
+			},
+			"WxJsApiDTO": {
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"properties": {
+					"appId": {
+						"type": "string",
+						"description": "应用ID"
+					},
+					"url": {
+						"type": "string",
+						"description": "签名用的url必须是调用JS接口页面的完整URL"
+					}
+				}
+			},
+			"WxJsApiDTO": {
+				"required": [
+					"url"
+				],
+				"type": "object",
+				"properties": {
+					"appId": {
+						"type": "string",
+						"description": "应用ID"
+					},
+					"url": {
+						"type": "string",
+						"description": "签名用的url必须是调用JS接口页面的完整URL"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+			"Authorization": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		}
+	}
+}

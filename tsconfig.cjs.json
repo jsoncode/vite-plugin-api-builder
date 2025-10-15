@@ -1,0 +1,8 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"module": "CommonJS",   // ✅ 改成 CJS
+		"moduleResolution": "Node", // CJS 下用普通 Node 解析
+		"outDir": "./dist-cjs"
+	}
+}
