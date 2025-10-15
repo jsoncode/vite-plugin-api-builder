@@ -5,6 +5,11 @@
 	"main": "./dist-cjs/index.js",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"scripts": {
+		"test": "tsx test.ts",
+		"clean": "node clean-dist.cjs",
+		"build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && echo '{\"type\":\"module\"}' > dist/package.json && echo '{\"type\":\"commonjs\"}' > dist-cjs/package.json && node scripts/increment-version.js patch"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -17,10 +22,6 @@
 		"dist-cjs",
 		"scripts"
 	],
-	"scripts": {
-		"clean": "node clean-dist.cjs",
-		"build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && echo '{\"type\":\"module\"}' > dist/package.json && echo '{\"type\":\"commonjs\"}' > dist-cjs/package.json && node scripts/increment-version.js patch"
-	},
 	"devDependencies": {
 		"@types/node": "^22.13.10",
 		"tsx": "^4.20.5",

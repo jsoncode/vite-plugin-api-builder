@@ -1,30 +1,29 @@
-import vitePluginApiBuilder from "src/index";
+import vitePluginApiBuilder from 'dist/index'
+import { readFileSync } from 'node:fs'
 
-console.log(typeof vitePluginApiBuilder ==='function')
+const envFile = readFileSync('.env.self', { encoding: 'utf-8' })
+const env: Record<string, string> = {}
+envFile.trim().split(/\s*\n\s*/).forEach(line => {
+	const [key, value] = line.trim().split(/\s*=\s*/)
+	console.log(value.trim())
+	try {
+		env[key.trim()] = JSON.parse(value.trim())
+	}catch (e) {
+		env[key.trim()] = value.trim()
+	}
+})
 
-async function run() {
-    // await vitePluginApiBuilder({
-    //     authToken,
-    //     useLock: false,
-    //     swagger: 'http://139.196.18.98:9999/webjars/swagger-ui/index.html?urls.primaryName=mallapi',
-    //     apiImports: [
-    //         `import type { RequestOptionProps } from '@/api/http.typed'`,
-    //         `import { post, get } from '@/api/http'`
-    //     ]
-    // })
-    await vitePluginApiBuilder({
-	    swagger: 'http://182.16.0.55:21009/doc.html',
-	    apiImports: [
-		    `import { post, get } from './http'`,
-		    `import { RequestOptionProps } from './http.typed'`
-	    ],
-	    apiTypeImport:`import {} from '@/typed/dto.typed'`,
-	    output:{
-		    api: 'src/api',
-		    typed: 'src/typed'
-	    }
-    })
-
-}
-
-// run()
+vitePluginApiBuilder({
+	useLock: false,
+	primaryNames: [
+		{
+			namespace: 'mallapi',
+			primaryName: 'mallapi',
+		}
+	],
+	swagger: env.VITE_APP_SWAGGER_URL,
+	apiImports: [
+		`import type { RequestOptionProps } from '@/api/http.typed'`,
+		`import { post, get, put } from '@/api/http'`,
+	]
+})
