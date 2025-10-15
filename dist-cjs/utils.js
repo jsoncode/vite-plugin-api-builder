@@ -706,7 +706,9 @@ function upperFirstCase(str) {
     });
 }
 function formatFnString(props) {
+    const methods = ['get', 'post', 'put', 'del', 'patch', 'head', 'options'];
     const { method, fnName, url, desc, reqType, resType } = props;
+    const newFnName = methods.includes(fnName) ? fnName + 'Fn' : fnName;
     const reqList = [];
     const reqListStr = [];
     Object.keys(reqType).map(i => {
@@ -726,7 +728,7 @@ function formatFnString(props) {
         ? `params: {${reqListStr.length > 1 ? `${lineN}\t${reqListStr.join(`,${lineN}\t`)}${lineN}` : ` ${reqListStr[0]} `}}, opt?: RequestOptionProps`
         : 'opt?: RequestOptionProps';
     return {
-        fnName,
+        fnName: newFnName,
         method,
         resType,
         reqType,
@@ -735,7 +737,7 @@ function formatFnString(props) {
  * @description ${desc}${reqList.length ? lineN + reqList.join(lineN) : ''}
  * @return Promise<${resType || 'any'}>
  */
-export const ${fnName} = async (${paramsTypeStr}) => {
+export const ${newFnName} = async (${paramsTypeStr}) => {
 	return ${method === 'delete' ? 'del' : method}<${resType || 'any'}>('${url}'${totalStr})
 }
 `

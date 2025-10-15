@@ -736,7 +736,9 @@ function formatFnString(props: {
 	reqType: any;
 	resType: string
 }) {
+	const methods = ['get', 'post', 'put', 'del', 'patch', 'head', 'options']
 	const { method, fnName, url, desc, reqType, resType } = props
+	const newFnName = methods.includes(fnName) ? fnName + 'Fn' : fnName
 	const reqList: string[] = []
 	const reqListStr: string[] = []
 
@@ -759,7 +761,7 @@ function formatFnString(props: {
 		: 'opt?: RequestOptionProps'
 
 	return {
-		fnName,
+		fnName: newFnName,
 		method,
 		resType,
 		reqType,
@@ -768,7 +770,7 @@ function formatFnString(props: {
  * @description ${desc}${reqList.length ? lineN + reqList.join(lineN) : ''}
  * @return Promise<${resType || 'any'}>
  */
-export const ${fnName} = async (${paramsTypeStr}) => {
+export const ${newFnName} = async (${paramsTypeStr}) => {
 	return ${method === 'delete' ? 'del' : method}<${resType || 'any'}>('${url}'${totalStr})
 }
 `
