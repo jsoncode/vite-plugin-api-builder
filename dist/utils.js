@@ -535,7 +535,7 @@ export function saveFn(props) {
     for (let i in fn) {
         const item = fn[i];
         if (item.fnBody) {
-            const reg = /return (post|get|del|put)<[^<>]+>\(/;
+            const reg = /return (get|post|del|put|head|options|patch)<[^<>]+>\(/;
             const result = item.fnBody.match(reg);
             if (result) {
                 const method = result[1];
@@ -547,7 +547,7 @@ export function saveFn(props) {
     }
     methods = methods.sort();
     importType = importType.map(i => {
-        const reg = /\{\s*(get|post|del|put)(\s*,\s*(get|post|del|put))*\s*\}/;
+        const reg = /\{\s*(get|post|del|put|head|options|patch)(\s*,\s*(get|post|del|put|head|options|patch))*\s*\}/;
         if (reg.test(i)) {
             i = i.replace(reg, '{ ' + methods.join(', ') + ' }');
         }

@@ -6,4 +6,7 @@ export declare function post<T>(url: string, options?: RequestOptionProps): Prom
 export declare function get<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
 export declare function del<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
 export declare function put<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
+export declare function head<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
+export declare function options<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
+export declare function patch<T>(url: string, options?: RequestOptionProps): Promise<AjaxReturn<T>>;
 //# sourceMappingURL=http.d.ts.map

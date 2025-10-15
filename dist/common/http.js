@@ -115,3 +115,15 @@ export async function put(url, options = {}) {
     // 发送请求并返回结果
     return request(url, options);
 }
+export async function head(url, options = {}) {
+    options.method = 'HEAD';
+    return request(url, options);
+}
+export async function options(url, options = {}) {
+    options.method = 'OPTIONS';
+    return request(url, options);
+}
+export async function patch(url, options = {}) {
+    options.method = 'PATCH';
+    return request(url, options);
+}

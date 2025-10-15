@@ -7,6 +7,9 @@ exports.post = post;
 exports.get = get;
 exports.del = del;
 exports.put = put;
+exports.head = head;
+exports.options = options;
+exports.patch = patch;
 const http_utils_1 = require("./http.utils");
 exports.api_base = '/api'; //import.meta.env.VITE_APP_PROXY_API_PREFIX
 // 导出一个异步函数，用于发送HTTP请求
@@ -122,5 +125,17 @@ async function put(url, options = {}) {
     // 设置请求方法为PUT
     options.method = 'PUT';
     // 发送请求并返回结果
+    return request(url, options);
+}
+async function head(url, options = {}) {
+    options.method = 'HEAD';
+    return request(url, options);
+}
+async function options(url, options = {}) {
+    options.method = 'OPTIONS';
+    return request(url, options);
+}
+async function patch(url, options = {}) {
+    options.method = 'PATCH';
     return request(url, options);
 }

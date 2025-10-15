@@ -3,7 +3,7 @@ export type ObjAny = {
 };
 export type LikeString = string | null;
 export type SingleType = string | number | boolean | undefined | null;
-export type MethodProps = 'GET' | 'POST' | 'PUT' | 'DELETE';
+export type MethodProps = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'PATCH';
 export type ResponseType = 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
 export type UploadProgressFn = (loaded: number, total: number, completed: boolean) => void | undefined;
 export type DownloadProgressFn = (loaded: number, total: number, completed: boolean) => void | undefined;

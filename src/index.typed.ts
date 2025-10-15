@@ -1,4 +1,4 @@
-export type ReqMethod = 'post' | 'get' | 'delete' | 'put' | 'update'
+export type ReqMethod = 'post' | 'get' | 'delete' | 'put' | 'update' | 'head' | 'patch' | 'options'
 
 export interface Dto {
 	type: string

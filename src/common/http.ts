@@ -137,3 +137,18 @@ export async function put<T>(url: string, options: RequestOptionProps = {}): Pro
     // 发送请求并返回结果
     return request<T>(url, options)
 }
+
+export async function head<T>(url: string, options: RequestOptionProps = {}): Promise<AjaxReturn<T>> {
+    options.method = 'HEAD'
+    return request<T>(url, options)
+}
+
+export async function options<T>(url: string, options: RequestOptionProps = {}): Promise<AjaxReturn<T>> {
+    options.method = 'OPTIONS'
+    return request<T>(url, options)
+}
+
+export async function patch<T>(url: string, options: RequestOptionProps = {}): Promise<AjaxReturn<T>> {
+    options.method = 'PATCH'
+    return request<T>(url, options)
+}
