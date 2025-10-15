@@ -1,6 +1,6 @@
 {
 	"name": "vite-plugin-api-builder",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"description": "一个vite插件，可以根据将swagger文档构建可用于生产的api文档和typescript类型文件",
 	"main": "./dist-cjs/index.js",
 	"module": "./dist/index.js",
