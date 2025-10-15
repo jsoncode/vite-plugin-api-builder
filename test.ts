@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs'
-import vitePluginApiBuilder from './dist'
+import vitePluginApiBuilder from 'src'
 
 const envFile = readFileSync('.env.self', { encoding: 'utf-8' })
 const env: Record<string, string> = {}

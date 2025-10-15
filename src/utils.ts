@@ -761,6 +761,7 @@ function formatFnString(props: {
 		? `params: {${reqListStr.length > 1 ? `${lineN}\t${reqListStr.join(`,${lineN}\t`)}${lineN}` : ` ${reqListStr[0]} `}}, opt?: RequestOptionProps`
 		: 'opt?: RequestOptionProps'
 
+	const newUrl = url.replace(/https?:\/\/[^/]+/i,'')
 	return {
 		fnName: newFnName,
 		method,
@@ -772,7 +773,7 @@ function formatFnString(props: {
  * @return Promise<${resType || 'any'}>
  */
 export const ${newFnName} = async (${paramsTypeStr}) => {
-	return ${method === 'delete' ? 'del' : method}<${resType || 'any'}>('${url}'${totalStr})
+	return ${method === 'delete' ? 'del' : method}<${resType || 'any'}>('${newUrl}'${totalStr})
 }
 `
 	}
