@@ -70,8 +70,8 @@ export interface ApiBuilderConfig {
 	output?: {
 		autoMkDir?: boolean
 		useTypeScript?: boolean
-		api: string
-		typed: string
+		api?: string
+		typed?: string
 	}
 	importConfig?: {}
 	filter?: (item: FilterProps) => boolean
