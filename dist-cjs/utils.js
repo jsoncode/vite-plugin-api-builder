@@ -235,6 +235,7 @@ function buildApiFox(apiList, schemaList, config) {
     const req = {};
     apiList.forEach(i => {
         const fnName = i.operationId;
+        i.path = i.path.replace(/https?:\/\/[^/]+/i, '');
         const desc = [
             i.tags.join('/'),
             i.name,

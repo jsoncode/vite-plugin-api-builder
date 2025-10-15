@@ -199,6 +199,7 @@ export function buildApiFox(apiList: ApiFoxDetail[], schemaList: ApiFoxSchema[],
 	const req: any = {}
 	apiList.forEach(i => {
 		const fnName = i.operationId
+		i.path = i.path.replace(/https?:\/\/[^/]+/i,'')
 		const desc = [
 			i.tags.join('/'),
 			i.name,
