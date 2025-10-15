@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.vitePluginApiBuilder = void 0;
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
 const utils_1 = require("./utils");
@@ -65,4 +66,6 @@ const vitePluginApiBuilder = async (config) => {
         }
     }
 };
+exports.vitePluginApiBuilder = vitePluginApiBuilder;
+// 为了解决 CJS 和 ESM 的兼容性问题，我们需要同时提供默认导出和命名导出
 exports.default = vitePluginApiBuilder;
