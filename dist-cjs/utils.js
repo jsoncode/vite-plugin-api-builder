@@ -893,5 +893,3 @@ async function updatePackage() {
         console.error(`❌ 升级失败: ${error.message}`);
     }
 }
-
-module.exports = exports.default;

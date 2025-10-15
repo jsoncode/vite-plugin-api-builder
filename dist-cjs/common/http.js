@@ -7,7 +7,7 @@ exports.post = post;
 exports.get = get;
 exports.del = del;
 exports.put = put;
-const http_utils_1 = require("./http.utils.cjs");
+const http_utils_1 = require("./http.utils");
 exports.api_base = '/api'; //import.meta.env.VITE_APP_PROXY_API_PREFIX
 // 导出一个异步函数，用于发送HTTP请求
 async function http(url, options = {}) {
@@ -124,5 +124,3 @@ async function put(url, options = {}) {
     // 发送请求并返回结果
     return request(url, options);
 }
-
-module.exports = exports.default;

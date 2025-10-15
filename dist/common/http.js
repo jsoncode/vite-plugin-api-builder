@@ -1,4 +1,4 @@
-import { clearNullData, formatCookie, listenEvent, mergeParams, setHeaders, setLoading } from './http.utils.js';
+import { clearNullData, formatCookie, listenEvent, mergeParams, setHeaders, setLoading } from './http.utils';
 export const api_base = '/api'; //import.meta.env.VITE_APP_PROXY_API_PREFIX
 // 导出一个异步函数，用于发送HTTP请求
 export async function http(url, options = {}) {

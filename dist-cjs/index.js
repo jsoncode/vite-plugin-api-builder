@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
-const utils_1 = require("./utils.cjs");
+const utils_1 = require("./utils");
 const vitePluginApiBuilder = async (config) => {
     if (config.swagger) {
         if (config.useLock) {

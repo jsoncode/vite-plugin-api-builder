@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { getApiAndBuild, getApiAndBuildApiFox, getDomain, getSwaggerDoc, pingHost, updatePackage } from './utils.js';
+import { getApiAndBuild, getApiAndBuildApiFox, getDomain, getSwaggerDoc, pingHost, updatePackage } from './utils';
 const vitePluginApiBuilder = async (config) => {
     if (config.swagger) {
         if (config.useLock) {
