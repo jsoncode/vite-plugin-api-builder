@@ -69,4 +69,5 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 
 // 为了解决 CJS 和 ESM 的兼容性问题，我们需要同时提供默认导出和命名导出
 export default vitePluginApiBuilder
-export { vitePluginApiBuilder }
+// 不需要额外的命名导出，只使用默认导出
+// export { vitePluginApiBuilder }
