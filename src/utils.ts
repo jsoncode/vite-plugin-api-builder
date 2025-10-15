@@ -199,7 +199,7 @@ export function buildApiFox(apiList: ApiFoxDetail[], schemaList: ApiFoxSchema[],
 	const req: any = {}
 	apiList.forEach(i => {
 		const fnName = i.operationId
-		i.path = i.path.replace(/https?:\/\/[^/]+/i,'')
+		i.path = i.path.replace(/https?:\/\/[^/]+/i, '')
 		const desc = [
 			i.tags.join('/'),
 			i.name,
@@ -338,6 +338,24 @@ export function buildPathTypeAndFn(paths: SwaggerJson['paths'], basePath: Swagge
 
 			// 处理请求参数
 			const params: any = {}
+			if (!sub.parameters && sub.requestBody?.content?.['application/json']) {
+				const required = sub.requestBody.required
+				const {
+					$ref,
+					type,
+					required: requireds,
+					items,
+					properties
+				} = sub.requestBody.content['application/json']?.schema
+
+				// TODO 兼容3.0 的schema
+				if ($ref) {
+					// params.req = {
+					// 	type: getRefType($ref),
+					// 	required
+					// }
+				}
+			}
 			if (sub.parameters) {
 				sub.parameters?.forEach(p => {
 					if (p.in === 'body') {
@@ -761,7 +779,7 @@ function formatFnString(props: {
 		? `params: {${reqListStr.length > 1 ? `${lineN}\t${reqListStr.join(`,${lineN}\t`)}${lineN}` : ` ${reqListStr[0]} `}}, opt?: RequestOptionProps`
 		: 'opt?: RequestOptionProps'
 
-	const newUrl = url.replace(/https?:\/\/[^/]+/i,'')
+	const newUrl = url.replace(/https?:\/\/[^/]+/i, '')
 	return {
 		fnName: newFnName,
 		method,

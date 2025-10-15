@@ -15,6 +15,27 @@ export interface FunctionProps {
 	consumes: string[]
 	produces: string[]
 	parameters: SwaggerReqParameters[]
+	requestBody?: {
+		content: {
+			'application/json': {
+				schema: {
+					required?: string[]
+					type?: string
+					$ref: string
+					items?: {
+						type?: string
+					},
+					properties?: {
+						[key: string]: {
+							type?: string
+							format?: string
+						}
+					}
+				},
+			}
+		},
+		required?: boolean
+	},
 	responses: {
 		[Key in 200]: SwaggerResponses
 	}
