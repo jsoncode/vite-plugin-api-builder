@@ -21,6 +21,10 @@ export interface FunctionProps {
     deprecated: boolean;
 }
 export interface SwaggerJson {
+    openapi: string;
+    servers?: {
+        url: string;
+    }[];
     definitions: {
         [key: string]: Dto;
     };
@@ -62,6 +66,7 @@ export interface ApiBuilderConfig {
         projectId: string;
     };
     output?: {
+        autoMkDir?: boolean;
         useTypeScript?: boolean;
         api: string;
         typed: string;

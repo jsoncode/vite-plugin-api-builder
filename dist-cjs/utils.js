@@ -51,11 +51,11 @@ exports.pingHost = pingHost;
 exports.installDependencies = installDependencies;
 exports.updatePackage = updatePackage;
 const child_process_1 = require("child_process");
+const node_fs_1 = require("node:fs");
 const http = __importStar(require("node:http"));
 const https = __importStar(require("node:https"));
-const path = __importStar(require("node:path"));
-const node_fs_1 = require("node:fs");
 const node_os_1 = require("node:os");
+const path = __importStar(require("node:path"));
 const node_path_1 = require("node:path");
 const lineN = (0, node_os_1.platform)() === 'win32' ? '\r\n' : '\n';
 const typeMap = {
@@ -312,9 +312,10 @@ function buildApiFox(apiList, schemaList, config) {
 }
 function buildApi(swaggerJson, config) {
     let dtoMap = {};
-    console.log(`开始构建接口文档：${swaggerJson.basePath}`);
-    const schemaType = buildSchemaType(swaggerJson.definitions);
-    const fnType = buildPathTypeAndFn(swaggerJson.paths, swaggerJson.basePath, config.filter);
+    const baseUrl = swaggerJson.basePath || swaggerJson.servers?.[0]?.url || '';
+    console.log(`开始构建接口文档：${baseUrl}`);
+    const schemaType = buildSchemaType(swaggerJson.definitions || swaggerJson.components?.schemas);
+    const fnType = buildPathTypeAndFn(swaggerJson.paths, baseUrl, config.filter);
     dtoMap = {
         ...fnType.dtoMap,
         ...schemaType.dtoMap
@@ -535,21 +536,26 @@ function buildSchemaType(definitions) {
 }
 function saveFn(props) {
     const { fn, dtoMap, config } = props;
+    const autoMkDir = config.output?.autoMkDir;
     const apiDir = config.output?.api || './src/api';
     const space = config.namespace;
     const dir = path.resolve('.', apiDir + (space ? '/' + space : ''));
     const url = path.resolve(dir, 'index.ts');
     (0, node_fs_1.mkdirSync)(dir, { recursive: true });
+    if (autoMkDir) {
+        (0, node_fs_1.mkdirSync)(apiDir, { recursive: true });
+    }
     // 将 http.ts, http.typed.ts, http.utils.ts 复制到指定目录
-    if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.ts'))) {
-        (0, node_fs_1.copyFileSync)(path.resolve('node_modules/vite-plugin-api-builder', 'http.ts'), path.resolve(apiDir, 'http.ts'));
-    }
-    if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.typed.ts'))) {
-        (0, node_fs_1.copyFileSync)(path.resolve('node_modules/vite-plugin-api-builder', 'http.typed.ts'), path.resolve(apiDir, 'http.typed.ts'));
-    }
-    if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.utils.ts'))) {
-        (0, node_fs_1.copyFileSync)(path.resolve('node_modules/vite-plugin-api-builder', 'http.utils.ts'), path.resolve(apiDir, 'http.utils.ts'));
-    }
+    // TODO
+    // if (!existsSync(path.resolve(apiDir, 'http.ts'))) {
+    // 	copyFileSync(path.resolve(__dirname, 'common/http.js'), path.resolve(apiDir, 'http.ts'))
+    // }
+    // if (!existsSync(path.resolve(apiDir, 'http.typed.d.js'))) {
+    // 	copyFileSync(path.resolve(__dirname, 'common/http.typed.d.js'), path.resolve(apiDir, 'http.typed.d.js'))
+    // }
+    // if (!existsSync(path.resolve(apiDir, 'http.utils.ts'))) {
+    // 	copyFileSync(path.resolve(__dirname, 'common/http.utils.js'), path.resolve(apiDir, 'http.utils.js'))
+    // }
     // 识别函数中引用的数据类型
     const importInFn = [];
     const fnList = Object.values(fn);
@@ -616,11 +622,12 @@ function buildImportStr(list) {
 function saveTyped(props) {
     const { importFnTypeList, dtoMap, dtoValue, config } = props;
     const space = config.namespace;
+    const autoMkDir = config.output?.autoMkDir;
     const dir = path.resolve('.', (config.output?.typed || './src/typed') + (space ? '/' + space : ''));
     const otherUrl = path.resolve(dir, 'dto.typed.ts');
     const dtoValueUrl = path.resolve(dir, 'dto.value.ts');
-    if (!(0, node_fs_1.existsSync)(dir)) {
-        (0, node_fs_1.mkdirSync)(dir);
+    if (!(0, node_fs_1.existsSync)(dir) && autoMkDir) {
+        (0, node_fs_1.mkdirSync)(dir, { recursive: true });
     }
     const needUseTypeList = [...importFnTypeList];
     importFnTypeList.forEach(i => {

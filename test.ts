@@ -1,5 +1,5 @@
-import vitePluginApiBuilder from 'dist/index'
 import { readFileSync } from 'node:fs'
+import vitePluginApiBuilder from './dist'
 
 const envFile = readFileSync('.env.self', { encoding: 'utf-8' })
 const env: Record<string, string> = {}
@@ -8,13 +8,19 @@ envFile.trim().split(/\s*\n\s*/).forEach(line => {
 	console.log(value.trim())
 	try {
 		env[key.trim()] = JSON.parse(value.trim())
-	}catch (e) {
+	} catch (e) {
 		env[key.trim()] = value.trim()
 	}
 })
 
 vitePluginApiBuilder({
 	useLock: false,
+	output: {
+		api: './testOutput/api',
+		typed: './testOutput/typed',
+		useTypeScript: true,
+		autoMkDir: true,
+	},
 	primaryNames: [
 		{
 			namespace: 'mallapi',

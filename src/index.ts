@@ -35,13 +35,28 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 			// 读取配置信息
 			console.log('读取swagger配置信息...');
 			const domain = getDomain(config.swagger)
-			const json = await getSwaggerDoc({
-				url: domain + '/swagger-resources'
+			let json = await getSwaggerDoc({
+				url: domain + '/swagger-resources' // 尝试v2版本接口
 			})
 
 			if (json.status && json.status !== 200) {
-				console.log('swagger接口文档获取失败', json)
-				return
+				// 尝试v3版本接口
+				///v3/api-docs/swagger-config
+				const res = await getSwaggerDoc({
+					url: domain + '/v3/api-docs/swagger-config' // 尝试v2版本接口
+				})
+
+				if (res.status && res.status !== 200){
+					console.log('swagger接口文档获取失败', res)
+					return
+				}
+
+				json = res.urls
+
+				if (!json?.length) {
+					console.log('swagger接口文档获取失败', res)
+					return
+				}
 			}
 
 			console.log('读取swagger接口文档...')
@@ -49,18 +64,14 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 				console.log('swagger接口文档获取失败', json)
 				return
 			}
-			if (json.length === 1) {
-				const chooseOne = json[0]
-				await getApiAndBuild(domain, chooseOne?.url, config)
-			} else if (json.length > 1 && config.primaryNames?.length) {
-				for (let i = 0; i < config.primaryNames.length; i++) {
-					const space = config.primaryNames[i]
-					const chooseOne = json.find((item: any) => item.name === space.primaryName)
-					await getApiAndBuild(domain, chooseOne.url, {
-						...config,
-						...space
-					})
-				}
+			const pnList = config.primaryNames || [{ namespace: config.primaryName, primaryName: config.primaryName}]
+			for (let i = 0; i < pnList.length; i++) {
+				const space = pnList[i]
+				const chooseOne = json.find((item: any) => item.name === space.primaryName)
+				await getApiAndBuild(domain, chooseOne.url, {
+					...config,
+					...space
+				})
 			}
 			console.log('接口文档构建完成')
 		}
