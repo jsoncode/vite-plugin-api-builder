@@ -1,0 +1,8 @@
+# Enforce consistent line endings
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.d.ts text eol=lf
+
+# Treat dist as generated, but still track
+cjs/**/* text eol=lf

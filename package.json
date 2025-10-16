@@ -1,30 +1,35 @@
 {
 	"name": "vite-plugin-api-builder",
-	"version": "1.0.13",
+	"version": "1.0.18",
 	"description": "一个vite插件，可以根据将swagger文档构建可用于生产的api文档和typescript类型文件",
-	"main": "./dist-cjs/index.js",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"module": "./mjs/index.js",
+	"types": "./mjs/index.d.ts",
+	"main": "./cjs/index.js",
 	"scripts": {
-		"test": "tsx test.ts",
-		"clean": "node clean-dist.cjs",
-		"build": "npm run clean && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && echo {\"type\":\"module\"} > dist/package.json && echo {\"type\":\"commonjs\"} > dist-cjs/package.json && node scripts/increment-version.js patch"
+		"build": "npm run build:mjs && npm run build:cjs && npm run writePackage && npm run updateVersion",
+		"build:mjs": "rimraf mjs && tsc --noEmitOnError -p tsconfig.json && cpy src/mjs-http/**/* mjs/mjs-http --parents",
+		"build:cjs": "rimraf cjs && tsc --noEmitOnError -p tsconfig.cjs.json && cpy src/cjs-http/**/* cjs/cjs-http --parents",
+		"updateVersion": "node scripts/increment-version.js patch",
+		"writePackage": "echo {\"type\":\"module\"} > mjs/package.json && echo {\"type\":\"commonjs\"} > cjs/package.json",
+		"test": "tsx test.ts"
 	},
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"require": "./dist-cjs/index.js",
-			"import": "./dist/index.js"
+			"import": "./mjs/index.js",
+			"types": "./mjs/index.d.ts",
+			"require": "./cjs/index.js"
 		}
 	},
 	"files": [
-		"dist",
-		"dist-cjs",
+		"mjs",
+		"cjs",
 		"scripts"
 	],
 	"devDependencies": {
-		"@types/node": "^22.13.10",
-		"tsx": "^4.20.5",
-		"typescript": "^5.8.2"
+		"@types/node": "^24.7.2",
+		"cpy-cli": "^6.0.0",
+		"rimraf": "^6.0.1",
+		"tsx": "^4.20.6",
+		"typescript": "^5.9.3"
 	}
 }

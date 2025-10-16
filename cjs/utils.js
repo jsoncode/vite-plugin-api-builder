@@ -57,6 +57,7 @@ const https = __importStar(require("node:https"));
 const node_os_1 = require("node:os");
 const path = __importStar(require("node:path"));
 const node_path_1 = require("node:path");
+const outputDir = './src/api';
 const lineN = (0, node_os_1.platform)() === 'win32' ? '\r\n' : '\n';
 const typeMap = {
     byte: 'number',
@@ -344,12 +345,13 @@ function buildPathTypeAndFn(paths, basePath, filter) {
     const dtoMap = {};
     const fn = {};
     for (const url in paths) {
+        const pathUrl = (basePath === '/' ? '' : basePath) + url;
         const item = paths[url];
         for (const method in item) {
             const sub = item[method];
             if (filter) {
                 const show = filter({
-                    url: (basePath === '/' ? '' : basePath) + url,
+                    url: pathUrl,
                     method,
                     ...sub
                 });
@@ -362,6 +364,17 @@ function buildPathTypeAndFn(paths, basePath, filter) {
             let resType = sub.responses?.['200']?.type ? (0, exports.getSingleType)(sub.responses?.['200'].type) : (0, exports.getRefType)(sub.responses?.['200']?.schema?.$ref);
             // 处理请求参数
             const params = {};
+            if (!sub.parameters && sub.requestBody?.content?.['application/json']) {
+                const required = sub.requestBody.required;
+                const { $ref, type, required: requireds, items, properties } = sub.requestBody.content['application/json']?.schema;
+                // TODO 兼容3.0 的schema
+                if ($ref) {
+                    // params.req = {
+                    // 	type: getRefType($ref),
+                    // 	required
+                    // }
+                }
+            }
             if (sub.parameters) {
                 sub.parameters?.forEach(p => {
                     if (p.in === 'body') {
@@ -457,7 +470,7 @@ function buildPathTypeAndFn(paths, basePath, filter) {
             fn[fnName] = formatFnString({
                 method,
                 fnName,
-                url: (basePath === '/' ? '' : basePath) + url,
+                url: pathUrl,
                 desc,
                 reqType: paramsType,
                 resType
@@ -538,9 +551,9 @@ function buildSchemaType(definitions) {
 function saveFn(props) {
     const { fn, dtoMap, config } = props;
     const autoMkDir = config.output?.autoMkDir;
-    const apiDir = config.output?.api || './src/api';
-    const space = config.namespace;
-    const dir = path.resolve('.', apiDir + (space ? '/' + space : ''));
+    const apiDir = config.output?.api || outputDir;
+    const space = config.namespace || '/';
+    const dir = path.join(apiDir, space);
     const url = path.resolve(dir, 'index.ts');
     (0, node_fs_1.mkdirSync)(dir, { recursive: true });
     if (autoMkDir) {
@@ -548,15 +561,25 @@ function saveFn(props) {
     }
     // 将 http.ts, http.typed.ts, http.utils.ts 复制到指定目录
     // TODO
-    // if (!existsSync(path.resolve(apiDir, 'http.ts'))) {
-    // 	copyFileSync(path.resolve(__dirname, 'common/http.js'), path.resolve(apiDir, 'http.ts'))
-    // }
-    // if (!existsSync(path.resolve(apiDir, 'http.typed.d.js'))) {
-    // 	copyFileSync(path.resolve(__dirname, 'common/http.typed.d.js'), path.resolve(apiDir, 'http.typed.d.js'))
-    // }
-    // if (!existsSync(path.resolve(apiDir, 'http.utils.ts'))) {
-    // 	copyFileSync(path.resolve(__dirname, 'common/http.utils.js'), path.resolve(apiDir, 'http.utils.js'))
-    // }
+    if (__dirname.endsWith('cjs')) {
+        if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.js'))) {
+            (0, node_fs_1.copyFileSync)(path.resolve(__dirname, 'cjs-http/http.js'), path.resolve(apiDir, 'http.js'));
+        }
+        if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.utils.js'))) {
+            (0, node_fs_1.copyFileSync)(path.resolve(__dirname, 'cjs-http/http.utils.js'), path.resolve(apiDir, 'http.utils.js'));
+        }
+    }
+    else {
+        if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.ts'))) {
+            (0, node_fs_1.copyFileSync)(path.resolve(__dirname, 'mjs-http/http.ts'), path.resolve(apiDir, 'http.ts'));
+        }
+        if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.typed.d.js'))) {
+            (0, node_fs_1.copyFileSync)(path.resolve(__dirname, 'mjs-http/http.typed.ts'), path.resolve(apiDir, 'http.typed.ts'));
+        }
+        if (!(0, node_fs_1.existsSync)(path.resolve(apiDir, 'http.utils.ts'))) {
+            (0, node_fs_1.copyFileSync)(path.resolve(__dirname, 'mjs-http/http.utils.ts'), path.resolve(apiDir, 'http.utils.ts'));
+        }
+    }
     // 识别函数中引用的数据类型
     const importInFn = [];
     const fnList = Object.values(fn);
@@ -586,7 +609,7 @@ function saveFn(props) {
             importType.push(v);
         }
         else {
-            importType.push(`import type {${buildImportStr([...importInFn].sort())}} from '@/typed${ns}/dto.typed'`);
+            importType.push(`import type {${buildImportStr([...importInFn].sort())}} from '@/api${ns}/dto.typed'`);
         }
     }
     let methods = [];
@@ -624,7 +647,7 @@ function saveTyped(props) {
     const { importFnTypeList, dtoMap, dtoValue, config } = props;
     const space = config.namespace;
     const autoMkDir = config.output?.autoMkDir;
-    const dir = path.resolve('.', (config.output?.typed || './src/typed') + (space ? '/' + space : ''));
+    const dir = path.resolve('.', (config.output?.typed || './src/api') + (space ? '/' + space : ''));
     const otherUrl = path.resolve(dir, 'dto.typed.ts');
     const dtoValueUrl = path.resolve(dir, 'dto.value.ts');
     if (!(0, node_fs_1.existsSync)(dir) && autoMkDir) {

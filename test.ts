@@ -17,7 +17,7 @@ vitePluginApiBuilder({
 	useLock: false,
 	output: {
 		api: './testOutput/api',
-		typed: './testOutput/typed',
+		typed: './testOutput/api',
 		useTypeScript: true,
 		autoMkDir: true,
 	},
@@ -29,7 +29,7 @@ vitePluginApiBuilder({
 	],
 	swagger: env.VITE_APP_SWAGGER_URL,
 	apiImports: [
-		`import type { RequestOptionProps } from '@/api/http.typed'`,
-		`import { post, get, put } from '@/api/http'`,
+		`import type { RequestOptionProps } from '../http.typed'`,
+		`import { post, get, put } from '../http'`,
 	]
 })

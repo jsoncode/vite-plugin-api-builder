@@ -1,8 +1,31 @@
 {
-	"extends": "./tsconfig.json",
-	"compilerOptions": {
-		"module": "CommonJS",   // ✅ 改成 CJS
-		"moduleResolution": "Node", // CJS 下用普通 Node 解析
-		"outDir": "dist-cjs"
-	}
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "cjs",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/index.ts",
+    "src/index.typed.ts",
+    "src/utils.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/common/http.js",
+    "src/common/http.utils.js"
+  ]
 }

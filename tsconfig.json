@@ -1,33 +1,37 @@
 {
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@/*": [
-				"./src/*"
-			]
-		},
-		"target": "ES2022",
-		"module": "ESNext",
-		// 👈 必须是 ESNext / ES2022
-		"moduleResolution": "Node",
-		// 推荐
-		"outDir": "./dist",
-		"rootDir": "./src",
-		"strict": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		// 可选，但推荐
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"declaration": true,
-		// 如果要发布 .d.ts
-		"declarationMap": true
-	},
-	"include": [
-		"src/**/*",
-		"dist-cjs/*"
-	],
-	"exclude": [
-		"node_modules"
-	]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "target": "ES2022",
+    "module": "ESNext",
+    // 👈 必须是 ESNext / ES2022
+    "moduleResolution": "Node",
+    // 推荐
+    "outDir": "./mjs",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    // 可选，但推荐
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    // 如果要发布 .d.ts
+    "declarationMap": true
+  },
+  "include": [
+    "src/index.ts",
+    "src/index.typed.ts",
+    "src/utils.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/common/http.ts",
+    "src/common/http.typed.ts",
+    "src/common/http.utils.ts"
+  ]
 }
