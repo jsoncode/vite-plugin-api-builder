@@ -43,7 +43,7 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 				// 尝试v3版本接口
 				///v3/api-docs/swagger-config
 				const res = await getSwaggerDoc({
-					url: domain + '/v3/api-docs/swagger-config' // 尝试v2版本接口
+					url: domain + '/v3/api-docs/swagger-config' // 尝试v3版本接口
 				})
 
 				if (res.status && res.status !== 200){

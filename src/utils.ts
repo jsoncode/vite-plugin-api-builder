@@ -347,24 +347,29 @@ export function buildPathTypeAndFn(paths: SwaggerJson['paths'], basePath: Swagge
 
 			// 处理请求参数
 			const params: any = {}
-			if (!sub.parameters && sub.requestBody?.content?.['application/json']) {
-				const required = sub.requestBody.required
-				const {
-					$ref,
-					type,
-					required: requireds,
-					items,
-					properties
-				} = sub.requestBody.content['application/json']?.schema
 
-				// TODO 兼容3.0 的schema
-				if ($ref) {
-					// params.req = {
-					// 	type: getRefType($ref),
-					// 	required
-					// }
-				}
-			}
+            // TODO 兼容3.0
+			// if (!sub.parameters && sub.requestBody?.content) {
+            //     for (let mime in sub.requestBody.content){
+            //         const {
+            //             $ref,
+            //             type,
+            //             required: requireds,
+            //             items,
+            //             properties
+            //         } = sub.requestBody.content[mime].schema
+            //
+            //         // TODO 兼容3.0 的schema
+            //         if ($ref) {
+            //             if (!params.body) {
+            //                 params.body = {}
+            //             }
+            //             params.body.name = {
+            //                 type: getRefType($ref)
+            //             }
+            //         }
+            //     }
+			// }
 			if (sub.parameters) {
 				sub.parameters?.forEach(p => {
 					if (p.in === 'body') {

@@ -17,7 +17,7 @@ export interface FunctionProps {
 	parameters: SwaggerReqParameters[]
 	requestBody?: {
 		content: {
-			'application/json': {
+			[key:string]: {
 				schema: {
 					required?: string[]
 					type?: string
