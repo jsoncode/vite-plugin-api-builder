@@ -98,11 +98,6 @@ export interface ApiBuilderConfig {
 	filter?: (item: FilterProps) => boolean
 }
 
-export interface ReqOptions {
-	url: string
-	headers?: { [key: string]: string }
-}
-
 export interface SwaggerReqParameters {
 	in: 'body' | 'query' | 'formData' | 'path' | 'header' | 'cookie'
 	name: string

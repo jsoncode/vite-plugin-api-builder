@@ -1,7 +1,10 @@
 import { existsSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path'
 import type { ApiBuilderConfig } from './index.typed'
-import { getApiAndBuild, getApiAndBuildApiFox, getDomain, getSwaggerDoc, pingHost, updatePackage } from './utils'
+import {request} from './request'
+import { getApiAndBuildApiFox, getDomain, pingHost, updatePackage } from './utils'
+import {getApiAndBuild} from "@/doc";
+import * as url from "node:url";
 
 const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 	if (config.swagger) {
@@ -33,16 +36,15 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 			await getApiAndBuildApiFox(config)
 		} else {
 			// 读取配置信息
-			console.log('读取swagger配置信息...');
 			const domain = getDomain(config.swagger)
-			let json = await getSwaggerDoc({
+			let json = await request({
 				url: domain + '/swagger-resources' // 尝试v2版本接口
 			})
 
 			if (json.status && json.status !== 200) {
 				// 尝试v3版本接口
 				///v3/api-docs/swagger-config
-				const res = await getSwaggerDoc({
+				const res = await request({
 					url: domain + '/v3/api-docs/swagger-config' // 尝试v3版本接口
 				})
 
@@ -59,7 +61,6 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 				}
 			}
 
-			console.log('读取swagger接口文档...')
 			if (!json) {
 				console.log('swagger接口文档获取失败', json)
 				return
@@ -68,12 +69,11 @@ const vitePluginApiBuilder = async (config: ApiBuilderConfig) => {
 			for (let i = 0; i < pnList.length; i++) {
 				const space = pnList[i]
 				const chooseOne = json.find((item: any) => item.name === space.primaryName)
-				await getApiAndBuild(domain, chooseOne.url, {
+				await getApiAndBuild(url.resolve(domain, chooseOne.url), {
 					...config,
 					...space
 				})
 			}
-			console.log('接口文档构建完成')
 		}
 	}
 }

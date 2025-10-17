@@ -1,7 +1,5 @@
 import {exec} from 'child_process'
 import {copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync} from 'node:fs'
-import * as http from 'node:http'
-import * as https from 'node:https'
 import {platform} from 'node:os'
 import * as path from 'node:path'
 import {resolve} from 'node:path'
@@ -11,9 +9,9 @@ import type {
     ApiFoxDetailParameters,
     ApiFoxSchema,
     ReqMethod,
-    ReqOptions,
     SwaggerJson
 } from './index.typed'
+import {request} from "@/request";
 
 const outputDir = './src/api'
 const apiImports = [
@@ -21,7 +19,6 @@ const apiImports = [
     `import { post, get, put } from '../http'`,
 ]
 const apiTypeImport = [
-
 ]
 const lineN = platform() === 'win32' ? '\r\n' : '\n'
 
@@ -163,43 +160,6 @@ export function getDomain(url: string): string {
 		return url
 	}
 	return url.match(/^https?:\/\/[^/]+/)?.[0] || ''
-}
-
-export async function getSwaggerDoc(options: ReqOptions): Promise<any> {
-	return new Promise(resolve => {
-		const fn = options.url.startsWith('https') ? https : http
-		fn.get(
-			options.url,
-			{
-				headers: {
-					Referer: options.url,
-					'Accept-Charset': 'utf-8',
-					...(options.headers || {})
-				}
-			},
-			resp => {
-				let data = ''
-				resp.setEncoding('utf8')
-				// 数据分块接收
-				resp.on('data', chunk => {
-					data += chunk
-				})
-
-				// 响应结束，处理完整的数据
-				resp.on('end', () => {
-					try {
-						const jsonData = JSON.parse(data) // 将 JSON 字符串解析为对象
-						resolve(jsonData)
-					} catch (e) {
-						resolve(null)
-					}
-				})
-			}
-		).on('error', e => {
-			console.log(e)
-			resolve(null)
-		})
-	})
 }
 
 export function buildApiFox(apiList: ApiFoxDetail[], schemaList: ApiFoxSchema[], config: ApiBuilderConfig) {
@@ -850,7 +810,7 @@ export const getApiAndBuildApiFox = async (config: ApiBuilderConfig) => {
 		console.log('未匹配到项目id，swagger地址格式应该是：', 'https://app.apifox.com/project/xxxxxxx')
 		return
 	}
-	let apiList = await getSwaggerDoc({
+    let apiList = await request({
 		url: `https://api.apifox.com/api/v1/api-details?locale=zh-CN`,
 		headers: {
 			Authorization: 'Bearer ' + config.authToken,
@@ -864,7 +824,7 @@ export const getApiAndBuildApiFox = async (config: ApiBuilderConfig) => {
 		apiList = apiList.filter(config.filter)
 	}
 
-	let schemasList = await getSwaggerDoc({
+    let schemasList = await request({
 		url: `https://api.apifox.com/api/v1/projects/${projectId}/data-schemas?locale=zh-CN`,
 		headers: {
 			Authorization: 'Bearer ' + config.authToken,
@@ -881,7 +841,7 @@ export const getApiAndBuild = async (domain: string, pathname: string, config: A
 	if (pathname) {
 		const url = domain + pathname
 		// 读取接口文档
-		const data = await getSwaggerDoc({
+		const data = await request({
 			url
 		})
 
